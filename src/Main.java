@@ -1,4 +1,6 @@
 import java.util.List;
+import java.util.Locale;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 import model.SecurityIncident;
@@ -12,45 +14,50 @@ public class Main {
         try (Scanner scanner = new Scanner(System.in)) {
             boolean running = true;
 
-            while (running) {
-                displayMenu();
-                System.out.print("Choose an option: ");
-                String menuInput = scanner.nextLine();
+            try {
+                while (running) {
+                    displayMenu();
+                    System.out.print("Choose an option: ");
+                    String menuInput = scanner.nextLine();
 
-                int choice;
-                try {
-                    choice = Integer.parseInt(menuInput.trim());
-                } catch (NumberFormatException exception) {
-                    System.out.println("Please enter a valid number from 1 to 7.");
-                    continue;
-                }
+                    int choice;
+                    try {
+                        choice = Integer.parseInt(menuInput.trim());
+                    } catch (NumberFormatException exception) {
+                        System.out.println("Please enter a valid number from 1 to 7.");
+                        continue;
+                    }
 
-                switch (choice) {
-                    case 1:
-                        addIncident(scanner, incidentService);
-                        break;
-                    case 2:
-                        viewAllIncidents(incidentService);
-                        break;
-                    case 3:
-                        findIncident(scanner, incidentService);
-                        break;
-                    case 4:
-                        updateIncidentStatus(scanner, incidentService);
-                        break;
-                    case 5:
-                        deleteIncident(scanner, incidentService);
-                        break;
-                    case 6:
-                        generateIncidentReport(incidentService);
-                        break;
-                    case 7:
-                        running = false;
-                        System.out.println("Goodbye.");
-                        break;
-                    default:
-                        System.out.println("Please choose an option from 1 to 7.");
+                    switch (choice) {
+                        case 1:
+                            addIncident(scanner, incidentService);
+                            break;
+                        case 2:
+                            viewAllIncidents(incidentService);
+                            break;
+                        case 3:
+                            findIncident(scanner, incidentService);
+                            break;
+                        case 4:
+                            updateIncidentStatus(scanner, incidentService);
+                            break;
+                        case 5:
+                            deleteIncident(scanner, incidentService);
+                            break;
+                        case 6:
+                            generateIncidentReport(incidentService);
+                            break;
+                        case 7:
+                            running = false;
+                            System.out.println("Goodbye.");
+                            break;
+                        default:
+                            System.out.println("Please choose an option from 1 to 7.");
+                    }
                 }
+            } catch (NoSuchElementException exception) {
+                System.out.println();
+                System.out.println("Input ended. Exiting CyberShield.");
             }
         }
     }
@@ -107,8 +114,8 @@ public class Main {
         SecurityIncident incident = incidentService.addIncident(
                 title.trim(),
                 description.trim(),
-                category.trim().toUpperCase(),
-                severity.trim().toUpperCase()
+                category.trim().toUpperCase(Locale.ROOT),
+                severity.trim().toUpperCase(Locale.ROOT)
         );
         System.out.println("Incident added:");
         System.out.println(incident);
